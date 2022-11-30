@@ -15,7 +15,7 @@ class User(AbstractUser):
 
 class TentativaLogin(models.Model):
     qtd_acesso_errado = models.IntegerField()#contar automatico
-    data = models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')
+    data = models.DateTimeField(default=django.utils.timezone.now, verbose_name='data')
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
@@ -52,8 +52,7 @@ class Transferecia(models.Model):
     valor_transferencia = models.DecimalField(decimal_places=2, max_digits=8)
 
 class Extrato(models.Model):
-    data = models.DateField()
-    hora = models.TimeField()
+    data =  models.DateTimeField(default=django.utils.timezone.now, verbose_name='data')
     titulo = models.CharField(max_length=30)
     valor = models.DecimalField(decimal_places=2, max_digits=8)
     fk_transferencia = models.ForeignKey(Transferecia, on_delete=models.PROTECT)
@@ -63,7 +62,7 @@ class Emprestimo(models.Model):
     valor_total_pedido = models.DecimalField(decimal_places=2, max_digits=8)# usuario escolhe
     valor_total_a_pagar = models.DecimalField(decimal_places=2, max_digits=8)# fazer conta dos juros**
     qtd_parcelas = models.IntegerField()# usuario escolhe
-    data_pedido = models.DateField()# pegar automatico
+    data_pedido =  models.DateTimeField(default=django.utils.timezone.now, verbose_name='data')
     fk_conta = models.ForeignKey(Conta, on_delete=models.PROTECT)
 
 

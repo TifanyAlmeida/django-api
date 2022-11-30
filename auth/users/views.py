@@ -208,7 +208,10 @@ class LogoutView(APIView):
 def criar_extrato_automaticamente(self, id_transferencia):
     
     meu_extrato = {
-        
+        "titulo": "",
+        "valor": "",
+        "fk_transferencia": "" 
+
     }
 
 
