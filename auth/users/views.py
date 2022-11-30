@@ -132,13 +132,11 @@ class LoginView(APIView):
 
         if serializer_log.is_valid():
             serializer_log.save()
-            # return Response('ok')
             return True
         else:
             print(serializer_log.errors)
             return False
-            # return Response(serializer_log.errors, status=status.HTTP_400_BAD_REQUEST)
-
+          
 
     def post(self, request):
         email = request.data['email']
@@ -151,9 +149,6 @@ class LoginView(APIView):
 
         if not user.check_password(password):
 
-            # serializer_register = UserSerializer(data=request.data)
-            # serializer_register.is_valid(raise_exception=True)
-            # serializer_register.save()
             self.registrar_log_acesso(user.id)
     
             raise AuthenticationFailed('Senha incorreta!')
