@@ -49,7 +49,7 @@ class TransferenciaSerializer(serializers.ModelSerializer):
 class ExtratoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Extrato
-        fields = ['id', 'data', 'hora', 'titulo', 'valor', 'fk_transferencia']
+        fields = ['id', 'data', 'titulo', 'valor', 'tipo', 'fk_pagador', 'fk_recebedor', 'fk_transferencia']
 
 
 class EmprestimoSerializer(serializers.ModelSerializer):

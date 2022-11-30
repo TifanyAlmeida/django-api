@@ -55,6 +55,9 @@ class Extrato(models.Model):
     data =  models.DateTimeField(default=django.utils.timezone.now, verbose_name='data')
     titulo = models.CharField(max_length=30)
     valor = models.DecimalField(decimal_places=2, max_digits=8)
+    tipo = models.CharField(max_length=30)
+    fk_pagador = models.IntegerField()
+    fk_recebedor = models.IntegerField()
     fk_transferencia = models.ForeignKey(Transferecia, on_delete=models.PROTECT)
 
 

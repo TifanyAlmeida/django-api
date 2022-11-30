@@ -1,10 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
-from .serializers import UserSerializer, ContaSerializer, CartaoSerializer, TentativaLoginSerializer, TransferenciaSerializer
+from .serializers import UserSerializer, ContaSerializer, CartaoSerializer, TentativaLoginSerializer, TransferenciaSerializer, ExtratoSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
-from .models import User, Conta, Cartao, TentativaLogin
+from .models import User, Conta, Cartao, TentativaLogin, Extrato
 import jwt, datetime
 from datetime import date, timedelta
 from random import randint
@@ -205,28 +205,50 @@ class LogoutView(APIView):
         return response
 
 
-def criar_extrato_automaticamente(self, id_transferencia):
-    
-    meu_extrato = {
-        "titulo": "",
-        "valor": "",
-        "fk_transferencia": "" 
+def criar_extrato_automaticamente(self, id_transferencia, descricao, tipo, id_pagador, id_recebedor, valor):
+    # verificar de trazer o nome da pessoa
+    id_conta_pagador = Conta.objects.get(pk=id_pagador)
+    id_conta_recebedor = Conta.objects.get(pk=id_recebedor)
 
+    id_user_pagador = User.objects.get(pk=id_conta_pagador.fk_user)
+    id_user_recebedor = User.objects.get(pk=id_conta_recebedor.fk_user)
+
+    nome_pagador = User.objects.filter(id=id_user_pagador)
+    nome_recebedor = User.objects.filter(id=id_user_recebedor)
+
+    meu_extrato = {
+        "titulo": descricao,
+        "valor": valor,
+        "tipo": tipo,
+        "fk_pagador": nome_pagador,
+        "fk_recebedor": nome_recebedor,
+        "fk_transferencia": id_transferencia
     }
 
+    serializer_extrato = ExtratoSerializer(data=meu_extrato)
 
-class transferencia(APIView):
+    serializer_extrato.is_valid(raise_exception=True)
+    serializer_extrato.save()
+    return Response('ok')
+
+
+class TransferenciaView(APIView):
     def post(self, request):
 
         serializer_transferencia = TransferenciaSerializer(data=request.data)
         
         serializer_transferencia.is_valid(raise_exception=True)
         serializer_transferencia.save()
-        self.criar_extrato_automaticamente(serializer_transferencia.data['id'])
+        pegar_dados = serializer_transferencia.data
+        self.criar_extrato_automaticamente(pegar_dados['id'], pegar_dados['descricao'], pegar_dados['tipo_transferencia'], pegar_dados['fk_pagador_conta'], \
+            pegar_dados["fk_recebedor_conta"], pegar_dados["valor_transferencia"])
 
-        return Response(serializer_transferencia.data)
+        return Response(pegar_dados)
 
+class ExtratoView(ListAPIView):
 
+    queryset = Extrato.objects.all()
+    serializer_class = ExtratoSerializer
 
 # extrato
 # transferencia

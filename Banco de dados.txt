@@ -1,0 +1,20 @@
+Criar um banco de dados com o nome
+django_auth_front
+
+
+Alterar as configurações para a do seu pc
+em settings.py
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django_auth_front',
+        'USER': 'root',
+        'PASSWORD': '1234'
+    }
+}
+
+
+**** COMPARAR OS SERILIZER COM O MODEL E O VIEWS, AS ROTAS TAMBÉM, VERIFICAR SE ESTÁ TUDO OK
+
+FAZER TRANSFERENCIA SE DER TEMPO FAZER EMPRESTIMO
