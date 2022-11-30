@@ -213,8 +213,8 @@ def criar_extrato_automaticamente(self, id_transferencia, descricao, tipo, id_pa
     id_user_pagador = User.objects.get(pk=id_conta_pagador.fk_user)
     id_user_recebedor = User.objects.get(pk=id_conta_recebedor.fk_user)
 
-    nome_pagador = User.objects.filter(id=id_user_pagador)
-    nome_recebedor = User.objects.filter(id=id_user_recebedor)
+    nome_pagador = User.objects.filter(id=id_user_pagador).first().nome
+    nome_recebedor = User.objects.filter(id=id_user_recebedor).first().nome
 
     meu_extrato = {
         "titulo": descricao,
@@ -230,7 +230,7 @@ def criar_extrato_automaticamente(self, id_transferencia, descricao, tipo, id_pa
     serializer_extrato.is_valid(raise_exception=True)
     serializer_extrato.save()
     return Response('ok')
-
+# entrada ou saida de dinheiro
 
 class TransferenciaView(APIView):
     def post(self, request):
@@ -242,6 +242,9 @@ class TransferenciaView(APIView):
         pegar_dados = serializer_transferencia.data
         self.criar_extrato_automaticamente(pegar_dados['id'], pegar_dados['descricao'], pegar_dados['tipo_transferencia'], pegar_dados['fk_pagador_conta'], \
             pegar_dados["fk_recebedor_conta"], pegar_dados["valor_transferencia"])
+
+
+            # fazer a conta de tirar de um e colocar no outro
 
         return Response(pegar_dados)
 
