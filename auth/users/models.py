@@ -50,6 +50,7 @@ class Transferecia(models.Model):
     fk_pagador_conta = models.ForeignKey(Conta, on_delete=models.PROTECT, related_name='fk_pagador_conta')#id_conta
     fk_recebedor_conta = models.ForeignKey(Conta, on_delete=models.PROTECT, related_name='fk_recebedor_conta')#id_conta
     valor_transferencia = models.DecimalField(decimal_places=2, max_digits=8)
+    entrada = models.BooleanField()
 
 class Extrato(models.Model):
     data =  models.DateTimeField(default=django.utils.timezone.now, verbose_name='data')

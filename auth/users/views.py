@@ -205,34 +205,78 @@ class LogoutView(APIView):
         return response
 
 
-def criar_extrato_automaticamente(self, id_transferencia, descricao, tipo, id_pagador, id_recebedor, valor):
-    # verificar de trazer o nome da pessoa
-    id_conta_pagador = Conta.objects.get(pk=id_pagador)
-    id_conta_recebedor = Conta.objects.get(pk=id_recebedor)
 
-    id_user_pagador = User.objects.get(pk=id_conta_pagador.fk_user)
-    id_user_recebedor = User.objects.get(pk=id_conta_recebedor.fk_user)
-
-    nome_pagador = User.objects.filter(id=id_user_pagador).first().nome
-    nome_recebedor = User.objects.filter(id=id_user_recebedor).first().nome
-
-    meu_extrato = {
-        "titulo": descricao,
-        "valor": valor,
-        "tipo": tipo,
-        "fk_pagador": nome_pagador,
-        "fk_recebedor": nome_recebedor,
-        "fk_transferencia": id_transferencia
-    }
-
-    serializer_extrato = ExtratoSerializer(data=meu_extrato)
-
-    serializer_extrato.is_valid(raise_exception=True)
-    serializer_extrato.save()
-    return Response('ok')
-# entrada ou saida de dinheiro
 
 class TransferenciaView(APIView):
+
+
+    def criar_extrato_automaticamente(self, id_transferencia, descricao, tipo, id_pagador, id_recebedor, valor):
+        # verificar de trazer o nome da pessoa
+        id_conta_pagador = Conta.objects.get(pk=id_pagador)
+        id_conta_recebedor = Conta.objects.get(pk=id_recebedor)
+
+        id_user_pagador = User.objects.get(pk=id_conta_pagador.fk_user)
+        id_user_recebedor = User.objects.get(pk=id_conta_recebedor.fk_user)
+
+        nome_pagador = User.objects.filter(id=id_user_pagador).first().nome
+        nome_recebedor = User.objects.filter(id=id_user_recebedor).first().nome
+
+        print(nome_pagador)
+        print(nome_recebedor)
+
+        meu_extrato = {
+            "titulo": descricao,
+            "valor": valor,
+            "tipo": tipo,
+            "fk_pagador": nome_pagador,
+            "fk_recebedor": nome_recebedor,
+            "fk_transferencia": id_transferencia,
+            "entrada": "",
+        }
+
+        serializer_extrato = ExtratoSerializer(data=meu_extrato)
+
+        serializer_extrato.is_valid(raise_exception=True)
+        serializer_extrato.save()
+        return Response('ok')
+    # entrada ou saida de dinheiro
+
+    def alterar_saldo(self, id_pagador, id_recebedor, valor):
+
+        saldo_pagador = Conta.objects.filter(pk=id_pagador).get().saldo
+        saldo_recebedor = Conta.objects.filter(pk=id_recebedor).get().saldo
+
+        novo_saldo_pagador = saldo_pagador - valor
+        novo_saldo_recebedor = saldo_recebedor + valor
+
+        print(saldo_pagador)
+
+        # pagador
+        status_saldo = {
+            "id": id_pagador,
+            "saldo": novo_saldo_pagador
+        }
+
+        serializer_conta = ExtratoSerializer(data=status_saldo)
+
+        serializer_conta.is_valid(raise_exception=True)
+        serializer_conta.save()
+        
+
+        # recebedor
+        status_saldo = {
+            "id": id_recebedor,
+            "saldo": novo_saldo_recebedor
+        }
+
+        serializer_conta = ExtratoSerializer(data=status_saldo)
+
+        serializer_conta.is_valid(raise_exception=True)
+        serializer_conta.save()
+        return Response('ok')
+
+
+# alterar o status de entrada ou saida de dinheiro, na transferencia
     def post(self, request):
 
         serializer_transferencia = TransferenciaSerializer(data=request.data)
@@ -240,10 +284,12 @@ class TransferenciaView(APIView):
         serializer_transferencia.is_valid(raise_exception=True)
         serializer_transferencia.save()
         pegar_dados = serializer_transferencia.data
-        self.criar_extrato_automaticamente(pegar_dados['id'], pegar_dados['descricao'], pegar_dados['tipo_transferencia'], pegar_dados['fk_pagador_conta'], \
-            pegar_dados["fk_recebedor_conta"], pegar_dados["valor_transferencia"])
+        pagador = pegar_dados['fk_pagador_conta']
+        recebedor = pegar_dados["fk_recebedor_conta"]
+        valor = pegar_dados["valor_transferencia"]
 
-
+        self.criar_extrato_automaticamente(pegar_dados['id'], pegar_dados['descricao'], pegar_dados['tipo_transferencia'], pagador, recebedor, valor)
+        self.alterar_saldo(pagador, recebedor, valor)
             # fazer a conta de tirar de um e colocar no outro
 
         return Response(pegar_dados)
