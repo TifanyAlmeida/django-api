@@ -34,7 +34,7 @@ class RegisterView(APIView):
         minha_conta = {
             "agencia": int(agencia), 
             "conta": int(conta),
-            "saldo": 0,
+            "saldo": 3000,
             "fk_user": id_user, 
         }
         serializer_conta = ContaSerializer(data=minha_conta)
@@ -194,6 +194,7 @@ class UserView(APIView):
 
         return Response(serializer_user.data)
 
+# reutilizar a autenticação e o logout nos outros métodos para limpar os dados
 class LogoutView(APIView):
     def post(self, request):
         response = Response()
@@ -203,7 +204,7 @@ class LogoutView(APIView):
         }
         return response
 
-
+# class transferencia
 
 
 # extrato
