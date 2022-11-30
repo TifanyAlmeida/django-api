@@ -13,24 +13,6 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-
-class Contato(models.Model):
-    telefone = models.IntegerField(unique=True,null=True)
-    celular = models.IntegerField(unique=True)
-    fk_user = models.ForeignKey(User, on_delete=models.PROTECT)
-
-
-class Endereco(models.Model):
-    rua = models.CharField(max_length=40)
-    bairro = models.CharField(max_length=30)
-    numero = models.CharField(max_length=6)
-    cidade = models.CharField(max_length=30)
-    pais = models.CharField(max_length=30)
-    CEP = models.IntegerField()
-    descricao_complemento = models.CharField(max_length=15)
-    fk_user = models.ForeignKey(User, on_delete=models.PROTECT)
-
-
 class TentativaLogin(models.Model):
     qtd_acesso_errado = models.IntegerField()#contar automatico
     data = models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')

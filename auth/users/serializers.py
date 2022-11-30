@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Contato, Endereco, TentativaLogin, Conta, Cartao, Transferecia, \
+from .models import User, TentativaLogin, Conta, Cartao, Transferecia, \
 Extrato, Emprestimo, ParcelaEmprestimo
 
 class UserSerializer(serializers.ModelSerializer):
@@ -18,18 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
-
-
-class ContatoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Contato
-        fields = '__all__'
-
-
-class EnderecoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Endereco
-        fields = '__all__'
 
 
 class TentativaLoginSerializer(serializers.ModelSerializer):

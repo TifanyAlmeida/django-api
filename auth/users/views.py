@@ -172,7 +172,7 @@ class LoginView(APIView):
 
 class TentativaLoginView(ListAPIView):
     queryset = TentativaLogin.objects.all()
-    serializer_cartao = TentativaLoginSerializer
+    serializer_class = TentativaLoginSerializer
 
 
 class UserView(APIView):
@@ -204,8 +204,8 @@ class LogoutView(APIView):
         return response
 
 
-# endereco
-# contato
+
+
 # extrato
 # transferencia
 # emprestimo
