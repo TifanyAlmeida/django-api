@@ -102,7 +102,7 @@ class ContaView(ListAPIView):
 
 class CartaoView(ListAPIView):
     queryset = Cartao.objects.all()
-    serializer_cartao = CartaoSerializer
+    serializer_class = CartaoSerializer
 
 
 class LoginView(APIView):
