@@ -35,7 +35,7 @@ class EnderecoSerializer(serializers.ModelSerializer):
 class TentativaLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = TentativaLogin
-        fields = ['id', 'qtd_acesso_errado', 'data', 'hora', 'fk_user']
+        fields = ['id', 'qtd_acesso_errado', 'data', 'fk_user']
 
 
 class ContaSerializer(serializers.ModelSerializer):
@@ -47,28 +47,29 @@ class ContaSerializer(serializers.ModelSerializer):
 class CartaoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cartao
-        fields = '__all__'
+        fields = ['id', 'numero', 'validade', 'cvv', 'limite_credito', 'fk_user']
+
 
 
 class TransferenciaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transferecia
-        fields = ['descricao', 'tipo_transferencia', 'fk_pagador_conta', 'fk_recebedor_conta',
+        fields = ['id', 'descricao', 'tipo_transferencia', 'fk_pagador_conta', 'fk_recebedor_conta',
          'valor_transferencia']
 
 
 class ExtratoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Extrato
-        fields = ['data', 'hora', 'titulo', 'valor', 'fk_transferencia']
+        fields = ['id', 'data', 'hora', 'titulo', 'valor', 'fk_transferencia']
 
 
 class EmprestimoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Emprestimo
-        fields = ['valor_total_pedido', 'valor_total_a_pagar', 'qtd_parcelas', 'data_pedido', 'fk_conta']
+        fields = ['id', 'valor_total_pedido', 'valor_total_a_pagar', 'qtd_parcelas', 'data_pedido', 'fk_conta']
 
 class  ParcelaEmprestimoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ParcelaEmprestimo
-        fields = ['valor_parcela', 'data_vencimento', 'fk_emprestimo']
+        fields = ['id', 'valor_parcela', 'data_vencimento', 'fk_emprestimo']

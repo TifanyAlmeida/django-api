@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import django.utils.timezone
 
 class User(AbstractUser):
     nome = models.CharField(max_length=255)
@@ -32,8 +33,7 @@ class Endereco(models.Model):
 
 class TentativaLogin(models.Model):
     qtd_acesso_errado = models.IntegerField()#contar automatico
-    data = models.DateField()#pegar automatico
-    hora = models.TimeField()#pegar automatico
+    data = models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
@@ -49,7 +49,7 @@ class Cartao(models.Model):
     validade = models.DateField()# fazer conta
     cvv = models.IntegerField(unique=True)# gerar aleatório
     limite_credito = models.DecimalField(decimal_places=2, max_digits=8)
-    fk_conta = models.ForeignKey(Conta, on_delete=models.PROTECT)
+    fk_user = models.ForeignKey(User, on_delete=models.PROTECT)
 
 
 class Transferecia(models.Model):
