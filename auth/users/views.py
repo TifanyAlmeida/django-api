@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
-from .serializers import UserSerializer, ContaSerializer, CartaoSerializer, TentativaLoginSerializer
+from .serializers import UserSerializer, ContaSerializer, CartaoSerializer, TentativaLoginSerializer, TransferenciaSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
@@ -204,7 +204,25 @@ class LogoutView(APIView):
         }
         return response
 
-# class transferencia
+
+def criar_extrato_automaticamente(self, id_transferencia):
+    
+    meu_extrato = {
+        
+    }
+
+
+class transferencia(APIView):
+    def post(self, request):
+
+        serializer_transferencia = TransferenciaSerializer(data=request.data)
+        
+        serializer_transferencia.is_valid(raise_exception=True)
+        serializer_transferencia.save()
+        self.criar_extrato_automaticamente(serializer_transferencia.data['id'])
+
+        return Response(serializer_transferencia.data)
+
 
 
 # extrato
