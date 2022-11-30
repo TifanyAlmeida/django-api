@@ -46,29 +46,33 @@ class RegisterView(APIView):
     # criando cartão
 
     def gerar_cartao(self):
+
+        self.random_numero = ""
+        self.random_cvv = ""
         
         # numero
-        for i in range(0,13):
+        for i in range(0,8):
             self.random_numero += str(randint(0,9))
         
         # cvv
         for i in range(0,3):
-            random_cvv += str(randint(0,9))
+            self.random_cvv += str(randint(0,9))
 
         # validade
         data_hoje = date.today()
         self.validade =  data_hoje + (timedelta(5*365))
 
-
+        return self.random_numero, self.validade, self.random_cvv
 
     def criar_cartao_automaticamente(self, id_user):
-        print(id_user)
+        
+        numero, validade, cvv = self.gerar_cartao()
 
         meu_cartao = {
 
-            "numero": int(self.random_numero),
-            "validade": self.validade,
-            "cvv": int(self.random_cvv),
+            "numero": int(numero),
+            "validade": validade,
+            "cvv": int(cvv),
             "limite_credito": 5000,
             "fk_user": id_user
         }
