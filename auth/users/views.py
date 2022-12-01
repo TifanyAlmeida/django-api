@@ -223,7 +223,7 @@ class TransferenciaView(APIView):
 
         print(nome_pagador)
         print(nome_recebedor)
-
+#fazer se é entrada ou saida
         meu_extrato = {
             "titulo": descricao,
             "valor": valor,
@@ -231,7 +231,7 @@ class TransferenciaView(APIView):
             "fk_pagador": nome_pagador,
             "fk_recebedor": nome_recebedor,
             "fk_transferencia": id_transferencia,
-            "entrada": "",
+            "entrada": True,
         }
 
         serializer_extrato = ExtratoSerializer(data=meu_extrato)
@@ -290,7 +290,6 @@ class TransferenciaView(APIView):
 
         self.criar_extrato_automaticamente(pegar_dados['id'], pegar_dados['descricao'], pegar_dados['tipo_transferencia'], pagador, recebedor, valor)
         self.alterar_saldo(pagador, recebedor, valor)
-            # fazer a conta de tirar de um e colocar no outro
 
         return Response(pegar_dados)
 

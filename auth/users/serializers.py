@@ -43,13 +43,13 @@ class TransferenciaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transferecia
         fields = ['id', 'descricao', 'tipo_transferencia', 'fk_pagador_conta', 'fk_recebedor_conta',
-         'valor_transferencia', 'entrada']
+         'valor_transferencia']
 
 
 class ExtratoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Extrato
-        fields = ['id', 'data', 'titulo', 'valor', 'tipo', 'fk_pagador', 'fk_recebedor', 'fk_transferencia']
+        fields = ['id', 'data', 'titulo', 'valor', 'tipo', 'fk_pagador', 'fk_recebedor', 'fk_transferencia', 'entrada']
 
 
 class EmprestimoSerializer(serializers.ModelSerializer):
