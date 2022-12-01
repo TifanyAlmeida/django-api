@@ -1,10 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
-from .serializers import UserSerializer, ContaSerializer, CartaoSerializer, TentativaLoginSerializer, TransferenciaSerializer, ExtratoSerializer
+from .serializers import UserSerializer, ContaSerializer, CartaoSerializer, TentativaLoginSerializer, TransferenciaSerializer,\
+    ExtratoSerializer, ParcelaEmprestimoSerializer, EmprestimoSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
-from .models import User, Conta, Cartao, TentativaLogin, Extrato
+from .models import User, Conta, Cartao, TentativaLogin, Extrato, Emprestimo, ParcelaEmprestimo
 import jwt, datetime
 from datetime import date, timedelta
 from random import randint
@@ -205,21 +206,22 @@ class LogoutView(APIView):
         return response
 
 
-
-
 class TransferenciaView(APIView):
 
 
     def criar_extrato_automaticamente(self, id_transferencia, descricao, tipo, id_pagador, id_recebedor, valor):
-        # verificar de trazer o nome da pessoa
+
         id_conta_pagador = Conta.objects.get(pk=id_pagador)
         id_conta_recebedor = Conta.objects.get(pk=id_recebedor)
 
-        id_user_pagador = User.objects.get(pk=id_conta_pagador.fk_user)
-        id_user_recebedor = User.objects.get(pk=id_conta_recebedor.fk_user)
+        print(id_conta_pagador.id)
+        print(id_conta_recebedor.id)
 
-        nome_pagador = User.objects.filter(id=id_user_pagador).first().nome
-        nome_recebedor = User.objects.filter(id=id_user_recebedor).first().nome
+        id_user_pagador = User.objects.filter(pk=id_conta_pagador.fk_user).get().id
+        id_user_recebedor = User.objects.filter(pk=id_conta_pagador.fk_user).get().id
+
+        nome_pagador = User.objects.filter(pk=id_user_pagador).first().nome
+        nome_recebedor = User.objects.filter(pk=id_user_recebedor).first().nome
 
         print(nome_pagador)
         print(nome_recebedor)
@@ -298,7 +300,36 @@ class ExtratoView(ListAPIView):
     queryset = Extrato.objects.all()
     serializer_class = ExtratoSerializer
 
-# extrato
-# transferencia
-# emprestimo
-# parcela do emprestimo
+class EmprestimoView(APIView):
+
+    def gerar_parcela(self, id_emprestimo, valor_total, qtd_parcela):
+
+        parcela = (valor_total+(valor_total*0,15))/qtd_parcela
+
+
+        minha_parcela = {
+            "valor_parcela": parcela,
+            "data_vencimento": date.today() + timedelta(parcela*30),
+            "fk_emprestimo": id_emprestimo
+        }
+
+        serializer_p_emprestimo = ParcelaEmprestimoSerializer(data=minha_parcela)
+
+        serializer_p_emprestimo.is_valid(raise_exception=True)
+        serializer_p_emprestimo.save()
+
+        return Response('ok')
+
+    def post(self, request):
+
+        serializer_emprestimo = EmprestimoSerializer(data=request.data)
+        
+        serializer_emprestimo.is_valid(raise_exception=True)
+        serializer_emprestimo.save()
+        self.gerar_parcela(serializer_emprestimo.data['id'], serializer_emprestimo.data['valor_total_pedido'], serializer_emprestimo.data['qtd_parcelas'])
+
+        return Response(serializer_emprestimo.data)
+
+class ParcelaEmprestimoView(ListAPIView):
+    queryset = ParcelaEmprestimo.objects.all()
+    serializer_class = ParcelaEmprestimoSerializer

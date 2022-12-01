@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import RegisterView, ContaView, CartaoView, LoginView, TentativaLoginView, UserView, LogoutView, TransferenciaView, ExtratoView
+from .views import RegisterView, ContaView, CartaoView, LoginView, TentativaLoginView, UserView, LogoutView, TransferenciaView,\
+    ExtratoView, EmprestimoView, ParcelaEmprestimoView
 
 urlpatterns = [
     path('cadastro/', RegisterView.as_view()),
@@ -14,5 +15,8 @@ urlpatterns = [
     
     path('transferencia/', TransferenciaView.as_view()),
     path('extrato/', TransferenciaView.as_view()),
+
+    path('emprestimo/', EmprestimoView.as_view()),
+    path('parcela_emprestimo/', ParcelaEmprestimoView.as_view()),
 
 ]
